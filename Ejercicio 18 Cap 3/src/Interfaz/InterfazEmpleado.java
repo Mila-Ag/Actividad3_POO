@@ -6,97 +6,93 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.border.Border;
+
 public class InterfazEmpleado extends JFrame implements ActionListener {
 
-    private JPanel panel;
-    private JLabel nombreLabel, codigoEmpleadoLabel, salarioBrutoLabel, salarioNetoLabel;
-    private JTextField nombreTextField, codigoEmpleadoTextField, salarioBrutoTextField, salarioNetoTextField;
+    private JLabel codigoLabel, nombreLabel, horasLabel, valorLabel, rtfteLabel, salarioBrutoLabel, salarioNetoLabel;
+    private JTextField codigoText, nombreText, horasText, valorText, rtfteText, salarioBrutoText, salarioNetoText;
     private JButton calcularButton, limpiarButton;
-    private Empleado empleado;
 
     public InterfazEmpleado() {
-        this.setTitle("Calculadora de Salario del Empleado");
-        this.setSize(400, 300);
-        this.setResizable(false);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        super("Calculadora de salario neto");
 
-        panel = new JPanel();
-        panel.setLayout(null);
-        panel.setBackground(new Color(173, 214, 245));
+        codigoLabel = new JLabel("Código:");
+        nombreLabel = new JLabel("Nombre:");
+        horasLabel = new JLabel("Horas trabajadas al mes:");
+        valorLabel = new JLabel("Valor hora trabajada:");
+        rtfteLabel = new JLabel("Porcentaje de retención en la fuente:");
+        salarioBrutoLabel = new JLabel("Salario bruto:");
+        salarioNetoLabel = new JLabel("Salario neto:");
 
-
-        nombreLabel = new JLabel("Nombre: ");
-        nombreLabel.setBounds(50, 50, 150, 20);
-        panel.add(nombreLabel);
-
-        nombreTextField = new JTextField();
-        nombreTextField.setBounds(200, 50, 150, 20);
-        panel.add(nombreTextField);
-
-        codigoEmpleadoLabel = new JLabel("Código Empleado: ");
-        codigoEmpleadoLabel.setBounds(50, 80, 150, 20);
-        panel.add(codigoEmpleadoLabel);
-
-        codigoEmpleadoTextField = new JTextField();
-        codigoEmpleadoTextField.setBounds(200, 80, 150, 20);
-        panel.add(codigoEmpleadoTextField);
-
-        salarioBrutoLabel = new JLabel("Salario Bruto: ");
-        salarioBrutoLabel.setBounds(50, 110, 150, 20);
-        panel.add(salarioBrutoLabel);
-
-        salarioBrutoTextField = new JTextField();
-        salarioBrutoTextField.setBounds(200, 110, 150, 20);
-        salarioBrutoTextField.setEditable(false);
-        panel.add(salarioBrutoTextField);
-
-        salarioNetoLabel = new JLabel("Salario Neto: ");
-        salarioNetoLabel.setBounds(50, 140, 150, 20);
-        panel.add(salarioNetoLabel);
-
-        salarioNetoTextField = new JTextField();
-        salarioNetoTextField.setBounds(200, 140, 150, 20);
-        salarioNetoTextField.setEditable(false);
-        panel.add(salarioNetoTextField);
+        codigoText = new JTextField(10);
+        nombreText = new JTextField(10);
+        horasText = new JTextField(10);
+        valorText = new JTextField(10);
+        rtfteText = new JTextField(10);
+        salarioBrutoText = new JTextField(10);
+        salarioNetoText = new JTextField(10);
+        salarioBrutoText.setEditable(false);
+        salarioNetoText.setEditable(false);
 
         calcularButton = new JButton("Calcular");
-        calcularButton.setBounds(50, 200, 100, 30);
-        calcularButton.addActionListener(this);
-        panel.add(calcularButton);
-
         limpiarButton = new JButton("Limpiar");
-        limpiarButton.setBounds(200, 200, 100, 30);
+
+        calcularButton.addActionListener(this);
         limpiarButton.addActionListener(this);
+
+        JPanel panel = new JPanel(new GridLayout(8,2));
+        panel.add(codigoLabel);
+        panel.add(codigoText);
+        panel.add(nombreLabel);
+        panel.add(nombreText);
+        panel.add(horasLabel);
+        panel.add(horasText);
+        panel.add(valorLabel);
+        panel.add(valorText);
+        panel.add(rtfteLabel);
+        panel.add(rtfteText);
+        panel.add(salarioBrutoLabel);
+        panel.add(salarioBrutoText);
+        panel.add(salarioNetoLabel);
+        panel.add(salarioNetoText);
+        panel.add(calcularButton);
         panel.add(limpiarButton);
 
-        empleado = new Empleado("", 0);
-
-        this.setContentPane(panel);
-        this.setVisible(true);
+        setContentPane(panel);
+        pack();
+        setVisible(true);
     }
 
-    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == calcularButton) {
-            empleado.nombre = nombreTextField.getText();
-            empleado.setCodigoEmpleado(codigoEmpleadoTextField.getText());
-            empleado.setValorHora(Double.parseDouble(JOptionPane.showInputDialog("Ingrese el valor de la hora trabajada: ")));
-            empleado.addHorasTrabajadas(Double.parseDouble(JOptionPane.showInputDialog("Ingrese la cantidad de horas trabajadas: ")));
-            salarioBrutoTextField.setText(String.valueOf(empleado.salarioBruto()));
-            salarioNetoTextField.setText(String.valueOf(empleado.salarioNeto()));
+            String codigo = codigoText.getText();
+            String nombre = nombreText.getText();
+            double horas = Double.parseDouble(horasText.getText());
+            double valor = Double.parseDouble(valorText.getText());
+            double porcentaje = Double.parseDouble(rtfteText.getText());
+
+            Empleado empleado = new Empleado(nombre, porcentaje);
+            empleado.setCodigoEmpleado(codigo);
+            empleado.setValorHora(valor);
+            empleado.addHorasTrabajadas(horas);
+
+            salarioBrutoText.setText(String.format("%.2f", empleado.salarioBruto()));
+            salarioNetoText.setText(String.format("%.2f", empleado.salarioNeto()));
         }
         else if (e.getSource() == limpiarButton) {
-            nombreTextField.setText("");
-            codigoEmpleadoTextField.setText("");
-            salarioBrutoTextField.setText("");
-            salarioNetoTextField.setText("");
-            empleado.resetHorasTrabajadas();
+            codigoText.setText("");
+            nombreText.setText("");
+            horasText.setText("");
+            valorText.setText("");
+            rtfteText.setText("");
+            salarioBrutoText.setText("");
+            salarioNetoText.setText("");
         }
     }
 
     public static void main(String[] args) {
-        InterfazEmpleado empleadoGUI = new InterfazEmpleado();
+        InterfazEmpleado interfaz = new InterfazEmpleado();
+        interfaz.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-}
 
+}

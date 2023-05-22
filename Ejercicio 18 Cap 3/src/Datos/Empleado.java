@@ -17,8 +17,7 @@ public class Empleado {
     }
 
     public void setCodigoEmpleado(String codigo) {
-        // Se podrían agregar condiciones para establecer un código
-        // por eso hice esta variable privada
+
         this.codigo_empleado = codigo;
     }
 
